@@ -28,4 +28,20 @@ jobs:
             pip install -r requirements.txt
     
     - name: Rodando Testes
-      run: robot -d results_robot tests/
+      run: robot -d results tests/
+
+    - name: Upload Test-Results
+      uses: actions/upload-artifact@v1
+      if: always()
+      with:
+          name: robot-test-result
+          path: ${{ github.workspace }}/results
+
+    - name: Send report to Build Summary
+      uses: joonvena/robotframework-reporter-action@v2.1
+      with:
+          gh_access_token: ${{ secrets.GITHUB_TOKEN }}
+          only_summary: 'true'
+          report_path: /results
+
+        
