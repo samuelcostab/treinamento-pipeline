@@ -6,26 +6,6 @@ name: Manual workflow
 # or API.
 on:
   workflow_dispatch:
-    # Inputs the workflow accepts.
-    inputs:
-      nome:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'Informe seu nome'
-        # Default value if no value is explicitly provided
-        default: ''
-        # Input has to be provided for the workflow to run
-        required: true
-        # The data type of the input
-        type: string
-      sobrenome:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'Informe seu sobrenome'
-        # Default value if no value is explicitly provided
-        default: ''
-        # Input has to be provided for the workflow to run
-        required: true
-        # The data type of the input
-        type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -34,9 +14,18 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - uses: actions/checkout@v3
 
-    - name: Exibindo Conteudo da pasta
-      run: ls    
+    - name: Configurando Python
+      uses: actions/setup-python@v3
+      with:
+          python-version: '3.10'
+
+    - name: Instalando Dependencias
+      run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+    
+    - name: Rodando Testes
+      run: robot -d results_robot tests/
